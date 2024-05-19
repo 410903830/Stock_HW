@@ -89,14 +89,64 @@ def MACD(Kbar, period1, period2):
 
 
 
-df['close']
+#標準差公式
+def SD(Kbar, period):
+    sd= Kbar['close'].rolling(window= period).std()
+    return sd
 
-KbarType(df)
-KbarToDict(df)
-MA(df, 10)
-RSI(df, 5)
-MACD(df, 12, 26)
 
+
+#布林通道(Bollinger Band)
+#Bollinger(df, 移動平均值, 標準差值)
+#長線：平均線+標準差  中線：平均線 短線：平均線-標準差
+def Bollinger(Kbar, period, sdv):
+    middle= MA(Kbar, period)
+    sd= SD(Kbar, period)
+    upper= middle+ sd*sdv
+    lower= middle- sd*sdv
+    
+    print(middle)
+    print(upper)
+    print(lower)
+    
+    return middle, upper, lower
+
+
+#Donchain Channel(DC, 唐奇安通道)
+def DC(Kbar, period):
+    max= Kbar['close'].rolling(window= period).max()
+    print(max)
+    min= Kbar['close'].rolling(window= period).min()
+    print(min)
+    middle= (max+min)/2
+    print(middle)
+    return ""
+
+
+#williams(威廉通道)
+def WR(Kbar, period):
+    close= Kbar['close']
+    print(close)
+    high= Kbar['high'].rolling(window= period).max()
+    print(high)    
+    low= Kbar['low'].rolling(window= period).min()
+    print(low)
+    wr= (high- close)/(high- low)*-100
+    print(wr)
+    return wr
+
+
+
+#df['close']
+
+#KbarType(df)
+#KbarToDict(df)
+#MA(df, 10)
+#RSI(df, 5)
+#MACD(df, 12, 26)
+#Bollinger(df, 20, 2)
+#DC(df, 20)
+WR(df, 14)
 
 
 
