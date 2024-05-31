@@ -11,10 +11,6 @@ Created on Fri May 31 17:24:26 2024
 """
 
 
-import os
-os.chdir(r'/Users/zhangjunzhi/Documents/final_exam/HW')
-
-
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from google.auth.transport.requests import Request
