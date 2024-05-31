@@ -2,5 +2,5 @@ pandas
 streamlit
 yfinance 
 Driver
-talib
+ta-lib
 plotly
