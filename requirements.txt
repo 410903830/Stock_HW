@@ -5,3 +5,4 @@ Driver
 ta-lib-bin
 google-api-python-client
 google
+plotly
