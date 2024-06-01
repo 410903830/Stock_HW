@@ -4,3 +4,5 @@ yfinance
 Driver
 ta-lib-bin
 plotly
+googleapiclient
+google
