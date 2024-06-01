@@ -3,6 +3,5 @@ streamlit
 yfinance 
 Driver
 ta-lib-bin
-plotly
-googleapiclient
+google-api-python-client
 google
