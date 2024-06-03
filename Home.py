@@ -60,7 +60,7 @@ else:
 #     st.success("data成功")
 
 
-###############################################################################
+#############################################################################################################################################################################################################################################
 
 
 #填寫相關數據
@@ -71,9 +71,12 @@ with st.expander("設定Ｋ棒相關參數"):
     Datelen= st.number_input("設定K棒長度(長度1~10)", min_value=1, max_value=10, value=1, key=int)
 #平均線天數
 with st.expander("設定平均線天數"):    
-    Mdate1= st.slider("設定移動平均長度（日）", min_value= 1, max_value= 100, value= 5, key='mdate1' )
+    Mdate1= st.slider("設定短移動平均線長度（日）", min_value= 1, max_value= 100, value= 5, key='mdate1' )
     #st.write(Mdate1)
-    Mdate2= st.slider("設定移動平均長度（日）", min_value= 1, max_value= 100, value= 20, key='mdate2' )
+    Mdate2= st.slider("設定長移動平均線長度（日）", min_value= 1, max_value= 100, value= 20, key='mdate2' )
+    if Mdate1>Mdate2:
+        st.warning("短平均線必須小於長平均線")
+    
 #Rsi線天數
 with st.expander("設定RSI天數"):
     Rsidate1= st.slider("設定RSI平均天數", min_value=1, max_value=100, value=6, key="Rsidate1")
@@ -87,6 +90,12 @@ with st.expander("設定MACD"):
     EMAS= st.slider("設定短期", min_value=1, max_value=100, value=12, key="EMAS")
     EMAL= st.slider("設定長期", min_value=1, max_value=100, value=26, key="EMAL")
     MACDL= st.slider("設定MACD", min_value=1, max_value=100, value=9, key="MACDL")
+    
+    
+    
+    
+#############################################################################################################################################################################################################################################    
+    
 
 
 #呼叫指標方法
@@ -126,23 +135,128 @@ ch.DCchart(df, DCmax, DCmiddle, DCmin)
 #####KDJ
 #####OBV
 
-
-
-
-#呼叫交易方法
-
+#############################################################################################################################################################################################################################################
 
 #呼叫交易損益並回測
 
 st.subheader("程式交易回測")
 
 
+        #####平均線策略
+
+import Order
+
+Record= Order.OrderRecord()
+StockQty= Record.OrderRecord.StockQty
+Order_Quantity= 1
+
+
+movesloss= 10    ###停損停利點
+for i in range(0, len(df.index)-1):
+   
+    StockQty= Record.OrderRecord.StockQty
+    
+    if StockQty==0:
+        #進場
+            ##多單進場
+            if df['MA1'][i-1] <= df['MA2'][i-1] and df['MA1'][i] > df['MA2'][i]:
+                Order.Order(Record, 'Buy', df.index[i], df['open'][i], Order_Quantity)
+                orderprice= df['open'][i+1]
+                stop=  orderprice- movesloss
+                continue
+            ##空單進場
+            if df['MA1'][i-1] >= df['MA2'][i-1] and df['MA1'][i] < df['MA2'][i]:
+                Order.Order(Record, 'Sell', df.index[i], df['open'][i], Order_Quantity)
+                orderprice= df['open'][i+1]
+                stop= orderprice+ movesloss  
+                continue
+
+
+                
+        #出場
+            ##多單出場
+    elif StockQty==1:
+        if df['close'][i]- movesloss >stop:
+            #繼續留
+            stop= df['close'][i]- movesloss
+            continue
+        
+        elif df['close'][i] <stop:
+            #停損停利出場
+            Order.Cover(Record, 'Sell', df.index[i], df['open'][i], Order_Quantity)
+            continue
+    
+    elif StockQty==-1:
+            ##空單出場
+            if df['close'][i]+movesloss< stop:
+                #繼續留
+                stop= df['close'][i]- movesloss
+                #停損停利出場
+            elif df['close'][i] > stop:
+                Order.Cover(Record, 'Buy', df.index[i], df['open'][i], Order_Quantity)
+                #停損停利出場
+                continue
+
+
+#get all record 
+allrecord= Record.OrderRecord.AllTradeRecord
+
+#進場買入
+OB= [i for i in allrecord if i[0]== 1 and i[1]== 'OrderBuy']
+#進場做空
+OS= [i for i in allrecord if i[0]== -1 and i[1]== 'OrderSell']
+#出場賣出
+CS= [i for i in allrecord if i[0]== -1 and i[1]== 'Cover Sell']
+#出場買入
+CB= [i for i in allrecord if i[0]== 1 and i[1]== 'Cover Buy']
+
+
+#畫圖
+    #移動平均線回測圖
+ch.MAbacktest(df, Mdate1, Mdate2, OB, CS, OS, CB)
+
+       
+    #順勢RSI回測
+        
+        
+    #逆勢RSI回測
+        
+        
+
+
+#############################################################################################################################################################################################################################################
+
+#績效
+st.subheader("績效")
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#############################################################################################################################################################################################################################################
 footer_html = """
 <footer style="text-align: center; padding-top: 20px;">
     <p>Copyright © 2024  Zhang-Jun-Zhi</p>

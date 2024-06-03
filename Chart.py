@@ -40,9 +40,6 @@ def Kbarchart(df, Mdate1, Mdate2):
         fig1.update_xaxes(rangeslider_visible=True, range=['2023-01-01', df.index[-1]])
         fig1.add_trace(go.Bar(x= df.index, y= df['volume'], name='成交量', marker=dict(color='black')),secondary_y=False)  
         st.plotly_chart(fig1, use_container_width=True)
-        
-        
-        
 #RSI圖
 def Rsichart(df, Rsidate1, Rsidate2):
     
@@ -63,7 +60,6 @@ def Rsichart(df, Rsidate1, Rsidate2):
         
         fig2.update_xaxes(rangeslider_visible=True, range=['2023-01-01', df.index[-1]])
         st.plotly_chart(fig2, use_container_width=True)
-        
 #MACD圖
 def Macdchart(df, DIF, DEM, OSC):
            
@@ -93,10 +89,7 @@ def Macdchart(df, DIF, DEM, OSC):
     
         fig3.update_xaxes(rangeslider_visible=True, range=['2023-01-01', df.index[-1]])
         st.plotly_chart(fig3, use_container_width= True)
-
-
 #Bolling圖
-
 def Bollingchart(df, Upper, Middle, Lower, BLN):
     with st.expander("布林通道"):
         fig4 = make_subplots(specs=[[{"secondary_y": True}]])
@@ -122,7 +115,6 @@ def Bollingchart(df, Upper, Middle, Lower, BLN):
         
         fig4.update_xaxes(rangeslider_visible=True, range=['2023-01-01', df.index[-1]])
         st.plotly_chart(fig4, use_container_width= True)
-
 #Willing圖
 def Willingchart(df, WLN):
     with st.expander("威廉指標"):
@@ -136,8 +128,6 @@ def Willingchart(df, WLN):
         
         fig5.update_xaxes(rangeslider_visible=True, range=['2023-01-01', df.index[-1]])
         st.plotly_chart(fig5, use_container_width= True)
-
-
 #唐奇安通道DC
 def DCchart(df, DCmax, DCmiddle, DCmin):
     with st.expander("唐奇安通道"):
@@ -164,7 +154,56 @@ def DCchart(df, DCmax, DCmiddle, DCmin):
         
         fig6.update_xaxes(rangeslider_visible=True, range=['2023-01-01', df.index[-1]])
         st.plotly_chart(fig6, use_container_width=True)
-
+#移動平均線回測
+def MAbacktest(df, Mdate1, Mdate2, OB, CS, OS, CB):
+    with st.expander("移動平均線回測"):
+            fig7 = make_subplots(specs=[[{"secondary_y": True}]])
+            fig7.add_trace(go.Candlestick(x=df.index,
+                           open= df['open'], high= df['high'],
+                           low= df['low'], close= df['close'], name='K線'),
+                           secondary_y= True)  
+            fig7.add_trace(go.Scatter(x=df.index,
+                           y= df['MA1'],
+                           line=dict(color="red", width=2),
+                           name= f"MA{Mdate1}"),
+                           secondary_y= True)  
+            fig7.add_trace(go.Scatter(x=df.index,
+                           y= df['MA2'],
+                           line=dict(color="blue", width=2),
+                           name= f"MA{Mdate2}"),
+                           secondary_y= True)  
+            fig7.add_trace(go.Scatter(x=[i[2] for i in OB], 
+                                      y=[i[3] for i in OB], mode='markers',  
+                                      marker=dict(color='red', 
+                                                 symbol='triangle-up', 
+                                                  size=8), 
+                                      name='作多進場點'), 
+                           secondary_y=False)
+            fig7.add_trace(go.Scatter(x=[i[2] for i in CS], 
+                                      y=[i[3] for i in CS], mode='markers',  
+                                      marker=dict(color='green', 
+                                                  symbol='triangle-down', 
+                                                  size=8), 
+                                      name='作多出場點'), 
+                           secondary_y=False)
+            fig7.add_trace(go.Scatter(x=[i[2] for i in OS], 
+                                      y=[i[3] for i in OS], mode='markers',  
+                                      marker=dict(color='pink', 
+                                                  symbol='triangle-up', 
+                                                  size=8), 
+                                      name='作空進場點'), 
+                           secondary_y=False)
+            fig7.add_trace(go.Scatter(x=[i[2] for i in CB], 
+                                      y=[i[3] for i in CB], mode='markers',  
+                                      marker=dict(color='blue', 
+                                                  symbol='triangle-down', 
+                                                  size=8), 
+                                      name='作空出場點'), 
+                           secondary_y=False)
+            
+            
+            st.plotly_chart(fig7, use_container_width=True)
+            
 
 
 
