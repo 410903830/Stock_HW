@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from matplotlib.font_manager import FontProperties as font
-font_path = "Cactus_Classical_Serif/CactusClassicalSerif-Regular.ttf"
+font_path = "SimHei.ttf"
 font = font(fname=font_path)
 
 
