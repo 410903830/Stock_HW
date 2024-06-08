@@ -46,8 +46,7 @@ st.markdown(html_content, unsafe_allow_html=True)
 #選擇資料來源
 data= None
 df = pd.read_excel("2014-05-31_2024-05-31_2330.tw.xlsx")
-df['Date'] = pd.to_datetime(df['Date'])
-df= df.set_index('Date')
+
 
 
 
@@ -69,8 +68,6 @@ if mode == "yfiance抓取":
         data= Fetch.Fetch(Stock_ID, start, end)
         data= pd.DataFrame(data)
         data.reset_index(inplace=True)
-        data['Date'] = pd.to_datetime(df['Date'])
-        data= data.set_index(data['Date'])
         df= data
         if df.empty:
             st.error("此股票抓取失敗(沒有資料)")
@@ -81,12 +78,10 @@ else:
         "請選擇金融商品",
         ("2330")
         )
-
-
-# if data is not None and not data.empty:
-#     df= data
-#     df= df.set_index('Date')
-#     st.success("data成功")
+    
+    
+df['Date'] = pd.to_datetime(df['Date'])
+df= df.set_index('Date')
 
 
 #############################################################################################################################################################################################################################################
