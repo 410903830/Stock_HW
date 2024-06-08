@@ -154,14 +154,14 @@ def DCchart(df, DCmax, DCmiddle, DCmin):
         
         fig6.update_xaxes(rangeslider_visible=True, range=['2023-01-01', df.index[-1]])
         st.plotly_chart(fig6, use_container_width=True)
+        
+        
+        
 #移動平均線回測
 def MAbacktest(df, Mdate1, Mdate2, OB, CS, OS, CB):
     with st.expander("移動平均線回測"):
             fig7 = make_subplots(specs=[[{"secondary_y": True}]])
-            fig7.add_trace(go.Candlestick(x=df.index,
-                           open= df['open'], high= df['high'],
-                           low= df['low'], close= df['close'], name='K線'),
-                           secondary_y= True)  
+
             fig7.add_trace(go.Scatter(x=df.index,
                            y= df['MA1'],
                            line=dict(color="red", width=2),
@@ -173,50 +173,177 @@ def MAbacktest(df, Mdate1, Mdate2, OB, CS, OS, CB):
                            name= f"MA{Mdate2}"),
                            secondary_y= True)  
             fig7.add_trace(go.Scatter(x=[i[2] for i in OB], 
-                                      y=[i[3] for i in OB], mode='markers',  
+                                      y=[i[4] for i in OB], mode='markers',  
                                       marker=dict(color='red', 
                                                  symbol='triangle-up', 
-                                                  size=8), 
+                                                  size=10), 
                                       name='作多進場點'), 
                            secondary_y=False)
             fig7.add_trace(go.Scatter(x=[i[2] for i in CS], 
-                                      y=[i[3] for i in CS], mode='markers',  
+                                      y=[i[4] for i in CS], mode='markers',  
                                       marker=dict(color='green', 
                                                   symbol='triangle-down', 
-                                                  size=8), 
+                                                  size=10), 
                                       name='作多出場點'), 
                            secondary_y=False)
             fig7.add_trace(go.Scatter(x=[i[2] for i in OS], 
-                                      y=[i[3] for i in OS], mode='markers',  
+                                      y=[i[4] for i in OS], mode='markers',  
                                       marker=dict(color='pink', 
-                                                  symbol='triangle-up', 
-                                                  size=8), 
+                                                  symbol='triangle-down', 
+                                                  size=10), 
                                       name='作空進場點'), 
                            secondary_y=False)
             fig7.add_trace(go.Scatter(x=[i[2] for i in CB], 
-                                      y=[i[3] for i in CB], mode='markers',  
+                                      y=[i[4] for i in CB], mode='markers',  
                                       marker=dict(color='blue', 
-                                                  symbol='triangle-down', 
-                                                  size=8), 
+                                                  symbol='triangle-up', 
+                                                  size=10), 
                                       name='作空出場點'), 
                            secondary_y=False)
             
             
+            fig7.update_xaxes(rangeslider_visible=True, range=['2023-01-01', df.index[-1]])
+            
             st.plotly_chart(fig7, use_container_width=True)
+            
+            
+#RSI線回測
+def RSIbacktest(df, Rsidate1, Rsidate2, RSIOB, RSICS, RSIOS, RSICB, Name):
+    with st.expander(Name):
+            fig8 = make_subplots(specs=[[{"secondary_y": True}]])
+            fig8.add_trace(go.Scatter(x=df.index,
+                           y= df['RSI1'],
+                           line=dict(color="red", width=2),
+                           name= f"MA{Rsidate1}"),
+                           secondary_y= True)  
+            fig8.add_trace(go.Scatter(x=df.index,
+                           y= df['RSI2'],
+                           line=dict(color="blue", width=2),
+                           name= f"MA{Rsidate2}"),
+                           secondary_y= True)  
+            fig8.add_trace(go.Scatter(x=[i[2] for i in RSIOB], 
+                                      y=[i[4] for i in RSIOB], mode='markers',  
+                                      marker=dict(color='red', 
+                                                 symbol='triangle-up', 
+                                                  size=10), 
+                                      name='作多進場點'), 
+                           secondary_y=False)
+            fig8.add_trace(go.Scatter(x=[i[2] for i in RSICS], 
+                                      y=[i[4] for i in RSICS], mode='markers',  
+                                      marker=dict(color='green', 
+                                                  symbol='triangle-down', 
+                                                  size=10), 
+                                      name='作多出場點'), 
+                           secondary_y=False)
+            fig8.add_trace(go.Scatter(x=[i[2] for i in RSIOS], 
+                                      y=[i[4] for i in RSIOS], mode='markers',  
+                                      marker=dict(color='pink', 
+                                                  symbol='triangle-up', 
+                                                  size=10), 
+                                      name='作空進場點'), 
+                           secondary_y=False)
+            fig8.add_trace(go.Scatter(x=[i[2] for i in RSICB], 
+                                      y=[i[4] for i in RSICB], mode='markers',  
+                                      marker=dict(color='blue', 
+                                                  symbol='triangle-down', 
+                                                  size=10), 
+                                      name='作空出場點'), 
+                           secondary_y=False)
+            
+            fig8.update_xaxes(rangeslider_visible=True, range=['2023-01-01', df.index[-1]])
+            
+            st.plotly_chart(fig8, use_container_width=True)
             
 
 
+            
+
+def KDJchart(df):
+    with st.expander("KDJ指標"):
+        fig9 = make_subplots(specs=[[{"secondary_y": True}]])
+        fig9.add_trace(go.Scatter(x=df.index,
+                               y=df['K'],
+                               mode='lines',
+                               line=dict(color='red', width=2),
+                               name= "K"),
+                               secondary_y=True)
+        fig9.add_trace(go.Scatter(x=df.index,
+                               y=df['D'],
+                               mode='lines',
+                               line=dict(color='green', width=2),
+                               name= "D"),
+                               secondary_y=True)
+        fig9.add_trace(go.Scatter(x=df.index,
+                               y=df['J'],
+                               mode='lines',
+                               line=dict(color='blue', width=2),
+                               name= "J"),
+                               secondary_y=True)
+        fig9.update_xaxes(rangeslider_visible=True, range=['2023-01-01', df.index[-1]])
+        st.plotly_chart(fig9, use_container_width= True)
 
 
+def OBVchart(df):   
+    with st.expander("OBV指標"):
+
+        fig10 = make_subplots(specs=[[{"secondary_y": True}]])
+        fig10.add_trace(go.Scatter(x=df.index,
+                            y=df['OBV'],
+                            mode='lines',
+                            line=dict(color='red', width=2),
+                            name= "K"),
+                            secondary_y=True)
+        fig10.update_xaxes(rangeslider_visible=True, range=['2023-01-01', df.index[-1]])
+        st.plotly_chart(fig10, use_container_width= True)
 
 
-
-
-
-
-
-
-
+#MACD回測
+def MACDbacktest(df, MACDOB, MACDCS, MACDOS, MACDCB, DIF, DEM):
+    with st.expander("MACD指標回測"):
+            fig8 = make_subplots(specs=[[{"secondary_y": True}]])
+            fig8.add_trace(go.Scatter(x=df.index,
+                           y= DIF,
+                           line=dict(color="orange", width=2),
+                           name= "DIF"),
+                           secondary_y= True)  
+            fig8.add_trace(go.Scatter(x=df.index,
+                           y= DEM,
+                           line=dict(color="yellow", width=2),
+                           name= "DEM"),
+                           secondary_y= True)  
+            fig8.add_trace(go.Scatter(x= [i[2] for i in MACDOB], 
+                                      y=[i[4] for i in MACDOB], mode='markers',  
+                                      marker=dict(color='red', 
+                                                 symbol='triangle-up', 
+                                                  size=10), 
+                                      name='作多進場點'), 
+                           secondary_y=False)
+            fig8.add_trace(go.Scatter(x= [i[2] for i in MACDCS], 
+                                      y=[i[4] for i in MACDCS], mode='markers',  
+                                      marker=dict(color='green', 
+                                                  symbol='triangle-down', 
+                                                  size=10), 
+                                      name='作多出場點'), 
+                           secondary_y=False)
+            fig8.add_trace(go.Scatter(x= [i[2] for i in MACDOS], 
+                                      y=[i[4] for i in MACDOS], mode='markers',  
+                                      marker=dict(color='pink', 
+                                                  symbol='triangle-up', 
+                                                  size=10), 
+                                      name='作空進場點'), 
+                           secondary_y=False)
+            fig8.add_trace(go.Scatter(x= [i[2] for i in MACDCB], 
+                                      y=[i[4] for i in MACDCB], mode='markers',  
+                                      marker=dict(color='blue', 
+                                                  symbol='triangle-down', 
+                                                  size=10), 
+                                      name='作空出場點'), 
+                           secondary_y=False)
+            
+            fig8.update_xaxes(rangeslider_visible=True, range=['2023-01-01', df.index[-1]])
+            
+            st.plotly_chart(fig8, use_container_width=True)
+            
 
 
 

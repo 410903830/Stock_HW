@@ -22,7 +22,7 @@ class OrderRecord():
 
 #############################################################################################################################################################################################################################################
 #移動平均回測方法
-def Order(OrderRecords,BS, OrderTime, OrderPrice, OrderQty):
+def Order(OrderRecords,BS, OrderTime, OrderPrice, OrderQty, figpoint):
     
     #Record = OrderRecord 當前物件資訊
     Record= OrderRecords
@@ -32,62 +32,56 @@ def Order(OrderRecords,BS, OrderTime, OrderPrice, OrderQty):
         for i in range(OrderQty):
              Record.OrderRecord.StockQty+=1
              StockQty= Record.OrderRecord.StockQty
-             Record.OrderRecord.AllTradeRecord.append([1, "OrderBuy",OrderTime, OrderPrice])
+             Record.OrderRecord.AllTradeRecord.append([1, "OrderBuy",OrderTime, OrderPrice, figpoint])
              continue
     elif BS=='Sell':
          for i in range(OrderQty):
               Record.OrderRecord.StockQty-=1
               StockQty= Record.OrderRecord.StockQty
-              Record.OrderRecord.AllTradeRecord.append([-1, "OrderSell",OrderTime, OrderPrice])
+              Record.OrderRecord.AllTradeRecord.append([-1, "OrderSell",OrderTime, OrderPrice, figpoint])
               continue
                 
-def Cover(OrderRecords,BS, OrderTime, OrderPrice, OrderQty):  
+def Cover(OrderRecords,CS, OrderTime, OrderPrice, OrderQty, figpoint):  
     #Record = OrderRecord 當前物件資訊
     Record= OrderRecords
     #當前為平倉數量
+    Qty= Record.OrderRecord.StockQty
        
-    if BS=='Buy':
+    if CS=='Buy':
         for i in range(OrderQty):
              Record.OrderRecord.StockQty+=1
-             AllTradeStock= Record.OrderRecord.AllTradeRecord
              AllTradePrice= Record.OrderRecord.Profit
              StockQty= Record.OrderRecord.StockQty
-             AllTradeStock.append([1, "Cover Buy",OrderTime, OrderPrice])
-             profit= OrderPrice- AllTradeStock[-2][3]
-             AllTradePrice.append(profit)
-             profit_rate= profit/ AllTradeStock[-2][3]
-             #print(profit)
+             Record.OrderRecord.AllTradeRecord.append([1, "Cover Buy",OrderTime, OrderPrice, figpoint])
+
+        profit= (OrderPrice- Record.OrderRecord.AllTradeRecord[-2][3])*Qty
+        AllTradePrice.append(profit)
              
-             continue
-    elif BS=='Sell':
+
+    elif CS=='Sell':
          for i in range(OrderQty):
               Record.OrderRecord.StockQty-=1
-              AllTradeStock= Record.OrderRecord.AllTradeRecord
               AllTradePrice= Record.OrderRecord.Profit
               StockQty= Record.OrderRecord.StockQty
-              AllTradeStock.append([-1, "Cover Sell",OrderTime, OrderPrice])
-              profit= OrderPrice- AllTradeStock[-2][3]
-              AllTradePrice.append(profit)
-              profit_rate= profit/ AllTradeStock[-2][3]
-              #print(profit)
-              continue
-        
-        
-#############################################################################################################################################################################################################################################        
-#RSI順勢回測方法    
-        
-        
-        
-#############################################################################################################################################################################################################################################        
-#RSI逆勢回測方法    
-        
-        
+              Record.OrderRecord.AllTradeRecord.append([-1, "Cover Sell",OrderTime, OrderPrice, figpoint])
+              
+         profit= (OrderPrice- Record.OrderRecord.AllTradeRecord[-2][3])*Qty
+         AllTradePrice.append(profit)
         
 #############################################################################################################################################################################################################################################
 #呼叫Record 方法     
+def getprofit(Record):
+    profit= Record.OrderRecord.Profit
+    if len(Record.OrderRecord.Profit)>0:
+        TotalProfit= [0]
+        for i in Record.OrderRecord.Profit:
+            TotalProfit.append(TotalProfit[-1]+i)
+    return TotalProfit
+
 def gettotalprofit(Record):
     AllTradePrice= Record.OrderRecord.Profit
-    print(sum(AllTradePrice))
+    return sum(AllTradePrice)
+    
 def getAvgProfit(Record):
     AllTradePrice= Record.OrderRecord.Profit
     count= len(AllTradePrice)
@@ -96,7 +90,46 @@ def getAvgProfit(Record):
         if(i>0):
           n+=1;      
     Avg= n/count
-    Avg = round(Avg * 100, 2)
-    print("勝率: {:.2f}%".format(Avg))
+    Avg= round(Avg * 100, 2)
+    #print("勝率: {:.2f}%".format(Avg))
+    
+    return format(Avg)
+    
+    
 def record(orderrecord):
     orderrecord.OrderRecord.StockQty+=1
+    
+    
+    # 最大累計盈虧回落(MDD)
+def GetMDD(Record):
+    MDD,Capital,MaxCapital = 0,0,0
+    for p in Record.OrderRecord.Profit:
+        Capital += p  ## Capital = Capital+p
+        MaxCapital = max(MaxCapital,Capital)
+        DD = MaxCapital - Capital
+        MDD = max(MDD,DD)
+    return MDD
+
+
+def getPprofit(Record):
+    Profit= Record.OrderRecord.Profit
+    Postive=0
+    for i in Profit:
+        if i >0:
+            Postive+=i
+    return Postive
+
+def getNprofit(Record):
+    Profit= Record.OrderRecord.Profit
+    Nagative=0
+    for i in Profit:
+        if i <0:
+            Nagative+=i
+    return Nagative
+
+
+    
+    
+    
+    
+    

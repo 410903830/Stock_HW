@@ -19,7 +19,6 @@ def Fetch(Stock_ID, start, end):
         try:
             data= yf.download(Stock_ID, start= start, end= end)
             data= pd.DataFrame(data)
-            st.success("抓取成功")
             try:
                 new_titles = {'Date': 'Date', 'Open': 'open', 'High': 'high', 'Low': 'low', 'Close': 'close', 'Volume': 'volume'}
                 data.rename(columns=new_titles, inplace=True)

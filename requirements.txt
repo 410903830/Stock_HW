@@ -7,3 +7,5 @@ google-api-python-client
 google
 plotly
 openpyxl
+numpy
+matplotlib.pyplot

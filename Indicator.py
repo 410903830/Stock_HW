@@ -100,11 +100,27 @@ def WR(df, period):
 
 
 # #KDJ(隨機指標)
-# import talib
-# from talib import abstract
-# abstract.STOCH(df)
+
+def KDJ(df, a, b, c):
+    #計算RSV
+    low_list= df['low'].rolling(a, min_periods= 1).min()
+    high_list= df['high'].rolling(a, min_periods= 1).max()
+    df['RSV']= (df['close']- low_list) / (high_list- low_list)*100
+
+    #計算KDJ值
+    df['K']= df['RSV'].ewm(span= b).mean()
+    df['D']= df['K'].ewm(span= c).mean()
+    df['J']= 3*df['K']- 2*df['D']
+
+
+    return df['K'], df['D'], df['J']
 
 # #OBV
-# talib.OBV(df['close'], df['volume'])
+
+def OBV(df):
+    OBV= talib.OBV(df['close'], df['volume'])
+    
+    return OBV 
+
 
 
