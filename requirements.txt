@@ -8,4 +8,4 @@ google
 plotly
 openpyxl
 numpy
-matplotlib.pyplot
+matplotlib
