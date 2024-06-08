@@ -29,6 +29,7 @@ def Fetch(Stock_ID, start, end):
                 return data
             except:
                     st.error("雲端存取失敗,沒有axial-trail")
+                    return data
         except Exception as e:
             st.error("抓取失敗")
             st.error(str(e))
