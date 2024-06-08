@@ -133,7 +133,7 @@ def BackRsi2(df, minline2, maxline2):
                     #order 
                     continue
                 ##空單進場(死亡交叉)
-                if  df['RSI1'][i-1]>=maxline2 and df['RSI1'][i-1]<maxline2:
+                if  df['RSI1'][i-1]>=maxline2 and df['RSI1'][i]<maxline2:
                     Order.Order(Record, 'Sell', df.index[i], df['open'][i], Order_Quantity, df['RSI1'][i])
                     orderprice = df['open'][i+1]
                     stop= orderprice+ movesloss
@@ -159,7 +159,7 @@ def BackRsi2(df, minline2, maxline2):
             elif df['close'][i]+movesloss <stop:
                 stop= df['close'][i]+ movesloss
                 continue
-    return(Record)
+    return Record
 
 
 

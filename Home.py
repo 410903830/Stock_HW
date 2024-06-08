@@ -95,22 +95,22 @@ else:
 #填寫相關數據
 st.subheader("設定指標參數")
 #K棒參數
-# with st.expander("設定Ｋ棒相關參數"):
-#     data= df
-#     Datenum= st.selectbox("選擇時間單位",{"日", "週", "月"}, index=2)
-#     aggregation = {
-#         'high': 'max',
-#         'low': 'min',
-#         'close': 'last',
-#         'open': 'first',
-#         'volume': 'sum'
-#     }
-#     if Datenum == "日":
-#         df = data
-#     elif Datenum == "週":
-#         df = df.resample('W').agg(aggregation)
-#     else:  # "月" 的情况
-#         df = df.resample('M').agg(aggregation)
+with st.expander("設定Ｋ棒相關參數"):
+    data= df
+    Datenum= st.selectbox("選擇時間單位",{"日", "週", "月"}, index=1)
+    aggregation = {
+        'high': 'max',
+        'low': 'min',
+        'close': 'last',
+        'open': 'first',
+        'volume': 'sum'
+    }
+    if Datenum == "日":
+        df = data
+    elif Datenum == "週":
+        df = df.resample('W').agg(aggregation)
+    else:  # "月" 的情况
+        df = df.resample('M').agg(aggregation)
 #平均線天數
 with st.expander("設定平均線天數"):    
     Mdate1= st.slider("設定短移動平均線長度（日）", min_value= 1, max_value= 100, value= 5, key='mdate1' )
