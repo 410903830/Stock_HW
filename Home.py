@@ -92,7 +92,7 @@ st.subheader("設定指標參數")
 #K棒參數
 with st.expander("設定Ｋ棒相關參數"):
     data= df
-    Datenum= st.selectbox("選擇時間單位",{"日", "週", "月"}, index=1)
+    Datenum= st.selectbox("選擇時間單位",{"日", "週", "月"}, index=0)
     aggregation = {
         'high': 'max',
         'low': 'min',
